@@ -6,7 +6,9 @@
     triageAlerts,
     mitreMap,
     phishFlags,
-    skills
+    skills,
+    pcapScenarios,
+    incidentCase
   } = window.PORTFOLIO_DATA;
 
   const $ = s => document.querySelector(s);
@@ -31,6 +33,89 @@
       clearTimeout(id);
       id = setTimeout(() => fn(...args), ms);
     };
+  };
+
+  /* Cyber Audio Synthesizer (Web Audio API - Zero External Dependencies) */
+  class CyberAudio {
+    constructor() {
+      this.ctx = null;
+      this.enabled = store.get('cyber-audio') === '1';
+    }
+    init() {
+      if (!this.ctx) {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (AudioCtx) this.ctx = new AudioCtx();
+      }
+      if (this.ctx && this.ctx.state === 'suspended') {
+        this.ctx.resume();
+      }
+    }
+    playTone(freq, type = 'sine', duration = 0.08, gainVal = 0.04) {
+      if (!this.enabled) return;
+      this.init();
+      if (!this.ctx) return;
+      try {
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+        gain.gain.setValueAtTime(gainVal, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start();
+        osc.stop(this.ctx.currentTime + duration);
+      } catch (e) {}
+    }
+    keyPress() {
+      if (!this.enabled) return;
+      this.playTone(320 + Math.random() * 80, 'triangle', 0.02, 0.02);
+    }
+    click() {
+      if (!this.enabled) return;
+      this.playTone(580, 'sine', 0.04, 0.03);
+    }
+    beep() {
+      if (!this.enabled) return;
+      this.playTone(880, 'sine', 0.07, 0.04);
+    }
+    alert() {
+      if (!this.enabled) return;
+      this.playTone(280, 'sawtooth', 0.15, 0.04);
+    }
+    success() {
+      if (!this.enabled) return;
+      this.playTone(523.25, 'triangle', 0.1, 0.04);
+      setTimeout(() => this.playTone(659.25, 'triangle', 0.12, 0.04), 80);
+      setTimeout(() => this.playTone(783.99, 'sine', 0.22, 0.05), 160);
+    }
+    contain() {
+      if (!this.enabled) return;
+      this.playTone(350, 'sawtooth', 0.09, 0.03);
+      setTimeout(() => this.playTone(700, 'sine', 0.18, 0.05), 90);
+    }
+  }
+
+  const audio = new CyberAudio();
+  const audioBtn = $('#audioBtn');
+  const updateAudioUI = () => {
+    audioBtn.textContent = audio.enabled ? '🔊' : '🔇';
+    audioBtn.classList.toggle('on', audio.enabled);
+    audioBtn.setAttribute('aria-pressed', String(audio.enabled));
+    audioBtn.title = audio.enabled ? 'Cyber Audio SFX: ON (Click to mute)' : 'Cyber Audio SFX: OFF (Click to enable)';
+  };
+  updateAudioUI();
+  audioBtn.onclick = () => {
+    audio.enabled = !audio.enabled;
+    store.set('cyber-audio', audio.enabled ? '1' : '0');
+    updateAudioUI();
+    if (audio.enabled) {
+      audio.init();
+      audio.success();
+      toast('🔊 Cyber audio FX activated');
+    } else {
+      toast('🔇 Cyber audio muted');
+    }
   };
 
   const toast = msg => {
@@ -61,6 +146,7 @@
     const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
     applyTheme(next);
     store.set('theme', next);
+    audio.click();
   };
 
   /* Matrix rain with pause/resume + debounced resize */
@@ -152,6 +238,7 @@
         d.className = 'ln ' + c;
         d.textContent = txt;
         bootLog.appendChild(d);
+        audio.keyPress();
       }, 180 * i);
     });
     setTimeout(endBoot, 180 * bootLines.length + 500);
@@ -172,6 +259,7 @@
     navUl.classList.toggle('open', o);
     menuBtn.classList.toggle('open', o);
     menuBtn.setAttribute('aria-expanded', String(o));
+    audio.click();
   };
   menuBtn.onclick = () => setMenu(!navUl.classList.contains('open'));
   navUl.addEventListener('click', e => { if (e.target.closest('a')) setMenu(false); });
@@ -185,7 +273,7 @@
       x = e.clientX;
       y = e.clientY;
       dot.style.transform = `translate(${x}px,${y}px)`;
-      ring.classList.toggle('hover', !!e.target.closest('a, button, input, .flip, .tag, .flag'));
+      ring.classList.toggle('hover', !!e.target.closest('a, button, input, .flip, .tag, .flag, .incident-node, .ws-tab, tr'));
     });
     document.addEventListener('mouseleave', () => {
       x = y = -100;
@@ -341,8 +429,10 @@
   };
 
   const cmds = {
-    help: () => print('<span class="c">available commands:</span>\n  <span class="k">whoami</span>      who is this analyst\n  <span class="k">skills</span>      tools &amp; tech stack\n  <span class="k">experience</span>  work history\n  <span class="k">certs</span>       certifications\n  <span class="k">education</span>   academic background\n  <span class="k">projects</span>    things I built\n  <span class="k">scan</span>        run a (fake) threat scan\n  <span class="k">nmap</span>        scan this portfolio\n  <span class="k">whois</span>       lookup the analyst\n  <span class="k">ping</span>        check if I\'m available\n  <span class="k">triage</span>      jump to the Triage Lab\n  <span class="k">phish</span>       jump to the Phish Hunt\n  <span class="k">contact</span>     get in touch\n  <span class="k">resume</span>      download my resume\n  <span class="k">print</span>       print-friendly resume view\n  <span class="k">theme</span>       toggle light/dark\n  <span class="k">history</span>     past commands\n  <span class="k">clear</span>       clear the screen\n<span class="c">psst… there are hidden commands too 👀</span>'),
+    help: () => print('<span class="c">available commands:</span>\n  <span class="k">whoami</span>      who is this analyst\n  <span class="k">incident</span>    open the Incident War Room attack graph\n  <span class="k">packets</span>     open the Mini-Wireshark PCAP inspector\n  <span class="k">triage</span>      jump to the Triage Lab\n  <span class="k">phish</span>       jump to the Phish Hunt\n  <span class="k">skills</span>      tools &amp; tech stack\n  <span class="k">experience</span>  work history\n  <span class="k">certs</span>       certifications\n  <span class="k">education</span>   academic background\n  <span class="k">projects</span>    things I built\n  <span class="k">scan</span>        run a (fake) threat scan\n  <span class="k">nmap</span>        scan this portfolio\n  <span class="k">whois</span>       lookup the analyst\n  <span class="k">ping</span>        check if I\'m available\n  <span class="k">audio</span>       toggle cyber sound FX\n  <span class="k">contact</span>     get in touch\n  <span class="k">resume</span>      download my resume\n  <span class="k">print</span>       print-friendly resume view\n  <span class="k">theme</span>       toggle light/dark\n  <span class="k">history</span>     past commands\n  <span class="k">clear</span>       clear the screen\n<span class="c">psst… there are hidden commands too 👀</span>'),
     whoami: () => print('<span class="s">Mohamad Syazwan Mohd Shukri</span>\nSOC Analyst @ BitRanger Sdn. Bhd. · Penang, MY\nK-Youth Development Programme, Khazanah Nasional\nBIT (Hons.) Computer System Security @ UniKL MIIT\nEx-SOC intern @ Heitech Padu Berhad'),
+    incident: () => { print('opening Incident War Room attack graph...'); location.hash = 'incident'; },
+    packets: () => { print('opening Mini-Wireshark PCAP inspector...'); location.hash = 'packets'; },
     skills: () => print('<span class="k">siem</span>     : Stellar Cyber, RSA NetWitness\n<span class="k">edr</span>      : Bitdefender, Trend Micro DSM\n<span class="k">firewall</span> : Palo Alto, Sangfor, Huawei, FortiWeb WAF\n<span class="k">network</span>  : MikroTik RouterOS, Wireshark\n<span class="k">os</span>       : Kali Linux, Windows\n<span class="k">code</span>     : Python, Java, C++, Solidity'),
     experience: () => print('<span class="s">[Aug 2026 – Present]</span>  SOC Analyst @ BitRanger Sdn. Bhd. (CyRes, USM)\n  › K-Youth Development Programme, Khazanah Nasional\n<span class="s">[Oct 2024 – Feb 2025]</span> SOC Analyst Intern @ Heitech Padu Berhad\n  › SIEM alert monitoring, IOC threat hunting, firewall/WAF blocking\n<span class="s">[Mar 2021 – Jul 2021]</span> Telecom Drafter Intern @ ECHO Broadband\n  › Fiber optic network drafting, SLDs'),
     certs: () => print('<span class="p">✓</span> CompTIA Security+  <span class="c">(Dec 2023)</span>\n<span class="p">✓</span> MikroTik MTCNA     <span class="c">(Dec 2020)</span>'),
@@ -358,6 +448,7 @@
     },
     triage: () => { print('opening Triage Lab...'); location.hash = 'triage'; },
     theme: () => { themeBtn.click(); print('theme → ' + root.dataset.theme); },
+    audio: () => { audioBtn.click(); print('audio → ' + (audio.enabled ? 'ON' : 'MUTED')); },
     clear: () => { out.innerHTML = ''; },
     scan: () => {
       const steps = [
@@ -368,15 +459,21 @@
         '[+] suspicious IPs blocked at firewall ✓',
         '<span class="p">[✓] environment secure. good job, analyst.</span>'
       ];
-      steps.forEach((s, i) => setTimeout(() => print(s, i === 3 ? 's' : ''), 380 * i));
+      steps.forEach((s, i) => setTimeout(() => {
+        print(s, i === 3 ? 's' : '');
+        audio.keyPress();
+      }, 380 * i));
     },
     'sudo hire-me': () => {
       print('[sudo] password for recruiter: ********');
-      setTimeout(() => print('<span class="p">✓ Access granted.</span> Great choice! Reach me at <a href="mailto:syazwanshkri1@gmail.com">syazwanshkri1@gmail.com</a> 🚀'), 600);
+      setTimeout(() => {
+        print('<span class="p">✓ Access granted.</span> Great choice! Reach me at <a href="mailto:syazwanshkri1@gmail.com">syazwanshkri1@gmail.com</a> 🚀');
+        audio.success();
+      }, 600);
       confetti();
     },
     sudo: () => print('<span class="e">usage: sudo hire-me</span>'),
-    ls: () => print('about.txt  experience.log  skills.yml  certs/  projects/  resume.pdf'),
+    ls: () => print('about.txt  experience.log  incident.case  pcap/  skills.yml  certs/  projects/  resume.pdf'),
     'rm -rf /': () => print('<span class="e">nice try. incident logged and escalated to L2 😄</span>'),
     nmap: () => {
       const L = [
@@ -389,12 +486,18 @@
         '<span class="p">1337/tcp  open      connect   happy to talk security</span>',
         'Nmap done: 1 IP address (1 host up) scanned in 0.42s'
       ];
-      L.forEach((l, i) => setTimeout(() => print(l), 140 * i));
+      L.forEach((l, i) => setTimeout(() => {
+        print(l);
+        audio.keyPress();
+      }, 140 * i));
     },
     whois: () => print('<span class="k">Domain</span>:      syazwan.portfolio\n<span class="k">Registrant</span>:  Mohamad Syazwan Mohd Shukri\n<span class="k">Role</span>:        SOC Analyst @ BitRanger Sdn. Bhd.\n<span class="k">Certs</span>:       CompTIA Security+, MikroTik MTCNA\n<span class="k">Location</span>:    Penang, MY\n<span class="k">Status</span>:      <span class="p">onShift ✓  openToConnect ✓</span>'),
     ping: () => {
       print('PING you → syazwan (on-shift): 56 data bytes');
-      [12, 9, 11, 8].forEach((t, i) => setTimeout(() => print(`64 bytes from syazwan: icmp_seq=${i + 1} ttl=64 time=${t} ms <span class="c">· replies fast</span>`), 350 * (i + 1)));
+      [12, 9, 11, 8].forEach((t, i) => setTimeout(() => {
+        print(`64 bytes from syazwan: icmp_seq=${i + 1} ttl=64 time=${t} ms <span class="c">· replies fast</span>`);
+        audio.beep();
+      }, 350 * (i + 1)));
       setTimeout(() => print('<span class="p">4 packets transmitted, 4 received, 0% packet loss. Reachable ✓</span>'), 1750);
     },
     history: () => print(hist.map((h, i) => `  ${String(i + 1).padStart(3)}  ${escHtml(h)}`).join('\n')),
@@ -420,6 +523,7 @@
     if (cmds[c]) cmds[c]('');
     else if (cmds[head]) cmds[head](raw.trim().slice(head.length).trim());
     else print(`<span class="e">command not found: ${escHtml(c)}</span> · type <span class="k">help</span>`);
+    audio.click();
   };
 
   function matrixBurst() {
@@ -444,11 +548,13 @@
       kp = 0;
       matrixBurst();
       confetti();
+      audio.success();
       toast('🕹 Konami code accepted: secret analyst mode unlocked');
     }
   });
 
   inp.addEventListener('keydown', e => {
+    audio.keyPress();
     if (e.key === 'Enter') { run(inp.value); inp.value = ''; }
     else if (e.key === 'ArrowUp') { if (hi > 0) inp.value = hist[--hi]; e.preventDefault(); }
     else if (e.key === 'ArrowDown') { inp.value = hi < hist.length - 1 ? hist[++hi] : (hi = hist.length, ''); e.preventDefault(); }
@@ -504,6 +610,7 @@
 
   /* Copy email */
   $$('[data-copy]').forEach(b => b.onclick = async () => {
+    audio.click();
     try {
       await navigator.clipboard.writeText(b.dataset.copy);
       toast('✓ email copied to clipboard');
@@ -526,7 +633,10 @@
   };
   addEventListener('scroll', onScroll, { passive: true });
   onScroll();
-  $('#toTop').onclick = () => scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' });
+  $('#toTop').onclick = () => {
+    audio.click();
+    scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' });
+  };
 
   /* Reveal + counters */
   const countUp = el => {
@@ -593,10 +703,156 @@
     const b = document.createElement('button');
     b.className = 'card step lift';
     b.innerHTML = `<div class="n">[0${i + 1}]</div><h4>${escHtml(t)}</h4>`;
-    b.onclick = () => showStep(i);
+    b.onclick = () => {
+      audio.click();
+      showStep(i);
+    };
     flow.appendChild(b);
   });
   showStep(0);
+
+  /* Feature 1: Interactive Incident War Room / Attack Graph */
+  const incidentChainEl = $('#incidentChain');
+  const actionListEl = $('#actionList');
+  const containBar = $('#containBar');
+  const caseStatusBadge = $('#caseStatusBadge');
+  const containBanner = $('#containBanner');
+  const executedActions = new Set();
+
+  const renderIncidentNodes = selectedNodeId => {
+    incidentChainEl.innerHTML = '';
+    incidentCase.nodes.forEach((n, idx) => {
+      const isContained = executedActions.has(n.containedBy);
+      const isSelected = selectedNodeId ? n.id === selectedNodeId : idx === 0;
+      const card = document.createElement('div');
+      card.className = `incident-node ${isContained ? 'contained' : 'compromised'} ${isSelected ? 'active-node' : ''}`;
+      card.innerHTML = `
+        <div class="incident-node-top">
+          <h4>[0${idx + 1}] ${escHtml(n.title)}</h4>
+          <span class="node-tactic">${escHtml(n.tactic)}</span>
+        </div>
+        <div class="node-host">${escHtml(n.host)}</div>
+        <p class="node-desc">${escHtml(n.desc)}</p>
+        <span class="node-badge">${isContained ? '🛡️ SEVERED &amp; CONTAINED' : '🚨 COMPROMISED LINK'}</span>
+      `;
+      card.onclick = () => {
+        audio.click();
+        renderIncidentNodes(n.id);
+        inspectNode(n);
+      };
+      incidentChainEl.appendChild(card);
+      if (isSelected) inspectNode(n);
+    });
+  };
+
+  const inspectNode = n => {
+    $('#nodeDetailTactic').textContent = n.tactic;
+    $('#nodeDetailTitle').textContent = n.title + ' — ' + n.host;
+    $('#nodeDetailDesc').textContent = n.desc;
+    $('#nodeDetailArtifact').textContent = 'Forensic Artifact: ' + n.artifact;
+  };
+
+  const renderContainmentActions = () => {
+    actionListEl.innerHTML = '';
+    incidentCase.actions.forEach(a => {
+      const isDone = executedActions.has(a.id);
+      const btn = document.createElement('button');
+      btn.className = `action-btn ${isDone ? 'done' : ''}`;
+      btn.disabled = isDone;
+      btn.innerHTML = `<b>${isDone ? '✓ Executed: ' : '▶ Execute: '}${escHtml(a.label)}</b><span>${escHtml(a.desc)}</span>`;
+      btn.onclick = () => executeContainment(a);
+      actionListEl.appendChild(btn);
+    });
+  };
+
+  const executeContainment = action => {
+    if (executedActions.has(action.id)) return;
+    executedActions.add(action.id);
+    audio.contain();
+    const pct = Math.round((executedActions.size / incidentCase.actions.length) * 100);
+    containBar.style.width = pct + '%';
+    renderContainmentActions();
+    renderIncidentNodes();
+
+    if (executedActions.size === incidentCase.actions.length) {
+      caseStatusBadge.textContent = '✓ FULLY CONTAINED';
+      caseStatusBadge.className = 'incident-status-pill contained';
+      containBanner.classList.add('show');
+      audio.success();
+      confetti();
+      toast('🏆 Threat chain severed: Incident fully contained!');
+    } else {
+      toast(`Action applied: ${action.label}`);
+    }
+  };
+
+  renderIncidentNodes();
+  renderContainmentActions();
+
+  /* Feature 2: Mini-Wireshark Packet Inspector */
+  const wsScenarioTabsEl = $('#wsScenarioTabs');
+  const wsFilterDisplayEl = $('#wsFilterDisplay');
+  const wsTableBodyEl = $('#wsTableBody');
+  const wsTreeDissectEl = $('#wsTreeDissect');
+  const wsHexDumpEl = $('#wsHexDump');
+  const wsAnalystNotesEl = $('#wsAnalystNotes');
+  const wsMitigationTextEl = $('#wsMitigationText');
+  let currentScenario = pcapScenarios[0];
+  let activePacketIdx = 0;
+
+  const selectScenario = sc => {
+    currentScenario = sc;
+    activePacketIdx = 0;
+    $$('#wsScenarioTabs .ws-tab').forEach((b, i) => b.classList.toggle('on', pcapScenarios[i].id === sc.id));
+    wsFilterDisplayEl.textContent = sc.displayFilter;
+    wsAnalystNotesEl.textContent = sc.analystNotes;
+    wsMitigationTextEl.textContent = sc.mitigation;
+    renderPacketsTable();
+    inspectPacket(0);
+  };
+
+  const renderPacketsTable = () => {
+    wsTableBodyEl.innerHTML = '';
+    currentScenario.packets.forEach((p, idx) => {
+      const tr = document.createElement('tr');
+      if (idx === activePacketIdx) tr.className = 'active';
+      tr.innerHTML = `
+        <td>${p.no}</td>
+        <td>${p.time}</td>
+        <td>${escHtml(p.src)}</td>
+        <td>${escHtml(p.dst)}</td>
+        <td><span class="mono" style="color:var(--accent)">${escHtml(p.proto)}</span></td>
+        <td>${p.len}</td>
+        <td>${escHtml(p.info)}</td>
+      `;
+      tr.onclick = () => {
+        audio.click();
+        activePacketIdx = idx;
+        $$('#wsTableBody tr').forEach((r, i) => r.classList.toggle('active', i === idx));
+        inspectPacket(idx);
+      };
+      wsTableBodyEl.appendChild(tr);
+    });
+  };
+
+  const inspectPacket = idx => {
+    const p = currentScenario.packets[idx] || currentScenario.packets[0];
+    if (!p) return;
+    wsTreeDissectEl.textContent = p.layers.join('\n\n');
+    wsHexDumpEl.textContent = p.hex;
+  };
+
+  pcapScenarios.forEach((sc, i) => {
+    const btn = document.createElement('button');
+    btn.className = `ws-tab ${i === 0 ? 'on' : ''}`;
+    btn.textContent = sc.name;
+    btn.onclick = () => {
+      audio.click();
+      selectScenario(sc);
+    };
+    wsScenarioTabsEl.appendChild(btn);
+  });
+  selectScenario(pcapScenarios[0]);
 
   /* Triage lab */
   const mitreHtml = a => {
@@ -652,7 +908,10 @@
         : 'Tough shift! Every analyst starts somewhere. Try again?';
     $('#feedback').className = 'feedback show good';
     $('#feedback').innerHTML = 'Like how this lab thinks? <a href="#contact">Let\'s talk</a>, I\'d love to bring this mindset to your SOC.';
-    if (pct >= 75) confetti();
+    if (pct >= 75) {
+      audio.success();
+      confetti();
+    }
   };
 
   const submitVerdict = v => {
@@ -663,8 +922,10 @@
     if (ok) {
       score++;
       streak++;
+      audio.beep();
     } else {
       streak = 0;
+      audio.alert();
       const c = $('#alertCard');
       c.classList.remove('shake');
       void c.offsetWidth;
@@ -678,11 +939,18 @@
     fb.className = 'feedback show ' + (ok ? 'good' : 'bad');
     $('#verdictBtns').style.display = 'none';
     updScore();
-    $('#nextBtn').onclick = () => { if (last) finish(); else { idx++; showAlert(); } };
+    $('#nextBtn').onclick = () => {
+      audio.click();
+      if (last) finish();
+      else { idx++; showAlert(); }
+    };
   };
 
   $$('#verdictBtns button').forEach(b => b.onclick = () => submitVerdict(b.dataset.v));
-  $('#restart').onclick = startGame;
+  $('#restart').onclick = () => {
+    audio.click();
+    startGame();
+  };
   startGame();
 
   /* Triage Lab keyboard shortcuts when section is visible */
@@ -728,9 +996,13 @@
     li.innerHTML = `<b>🚩 ${escHtml(phishFlags[id][0])}</b>${escHtml(phishFlags[id][1])}`;
     list.appendChild(li);
     pUpdate();
-    if (!silent && pFound.size === pTotal) {
-      toast(pMiss === 0 ? '🎯 Perfect! All red flags, zero misclicks' : '✓ All 8 red flags found. Nice hunting!');
-      confetti();
+    if (!silent) {
+      audio.beep();
+      if (pFound.size === pTotal) {
+        audio.success();
+        toast(pMiss === 0 ? '🎯 Perfect! All red flags, zero misclicks' : '✓ All 8 red flags found. Nice hunting!');
+        confetti();
+      }
     }
   };
 
@@ -740,6 +1012,7 @@
     } else {
       pMiss++;
       pUpdate();
+      audio.alert();
       toast('Looks legit. Keep hunting 🔍');
     }
   };
@@ -754,8 +1027,12 @@
     handleFlagActivate(f);
   });
 
-  $('#pReveal').onclick = () => Object.keys(phishFlags).forEach(id => pMark(id, true));
+  $('#pReveal').onclick = () => {
+    audio.click();
+    Object.keys(phishFlags).forEach(id => pMark(id, true));
+  };
   $('#pReset').onclick = () => {
+    audio.click();
     pFound = new Set();
     pMiss = 0;
     $$('#mail .flag').forEach(f => f.classList.remove('found'));
@@ -775,13 +1052,17 @@
   });
 
   $$('#filters button').forEach(b => b.onclick = () => {
+    audio.click();
     $$('#filters button').forEach(x => x.classList.toggle('on', x === b));
     $$('#skillGrid .skill').forEach(s => s.classList.toggle('dim', b.dataset.f !== 'all' && s.dataset.cat !== b.dataset.f));
   });
 
   /* Flip cards */
   $$('.flip').forEach(f => {
-    const t = () => f.classList.toggle('flipped');
+    const t = () => {
+      audio.click();
+      f.classList.toggle('flipped');
+    };
     f.onclick = t;
     f.onkeydown = e => {
       if (e.key === 'Enter' || e.key === ' ') {

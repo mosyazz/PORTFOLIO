@@ -75,7 +75,10 @@
     <ul id="navLinks">
       <li><a href="#about">About</a></li>
       <li><a href="#experience">Experience</a></li>
-      <li><a href="#triage">Triage Lab</a></li>
+      <li><a href="#workflow">Workflow</a></li>
+      <li><a href="#incident">Incident Lab</a></li>
+      <li><a href="#packets">PCAP Inspector</a></li>
+      <li><a href="#triage">Triage</a></li>
       <li><a href="#phishing">Phish Hunt</a></li>
       <li><a href="#skills">Skills</a></li>
       <li><a href="#certifications">Certs</a></li>
@@ -83,6 +86,7 @@
       <li><a href="#contact">Contact</a></li>
     </ul>
     <div class="nav-actions">
+      <button class="audio-btn" id="audioBtn" aria-label="Toggle cyber audio effects" aria-pressed="false" title="Enable Cyber Audio SFX">🔇</button>
       <button class="theme-btn" id="themeBtn" aria-label="Toggle light and dark theme" aria-pressed="true">◐</button>
       <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks"><span></span><span></span><span></span></button>
     </div>
@@ -104,9 +108,9 @@
           <p class="lead">I monitor, investigate and respond to security events. I'm a SOC Analyst at BitRanger Sdn. Bhd. through Khazanah Nasional's K-Youth Development Programme. Before that, as a SOC intern at Heitech Padu Berhad, I triaged SIEM alerts, hunted for IOCs and blocked threats on enterprise firewalls and WAFs.</p>
           <div class="cta">
             <button class="btn primary" data-copy="syazwanshkri1@gmail.com">✉ Copy email</button>
-            <a class="btn" href="https://www.linkedin.com/in/syazwan-shukri/" target="_blank" rel="noopener noreferrer">in LinkedIn</a>
+            <a class="btn" href="#incident">⚔ Incident Lab</a>
+            <a class="btn" href="#packets">🔍 PCAP Inspector</a>
             <a class="btn" href="RESUME_SYAZWAN_SHUKRI.pdf" download>↓ Resume</a>
-            <a class="btn" href="#triage">▶ Try the Triage Lab</a>
           </div>
         </div>
 
@@ -117,7 +121,7 @@
             <div class="term-input"><span class="p">$</span><input id="termIn" autocomplete="off" spellcheck="false" aria-label="Terminal command input" placeholder="type 'help'"></div>
           </div>
           <div class="chips" id="chips">
-            <button>whoami</button><button>skills</button><button>experience</button><button>certs</button><button>scan</button><button>contact</button><button>sudo hire-me</button>
+            <button>whoami</button><button>incident</button><button>packets</button><button>skills</button><button>triage</button><button>scan</button><button>sudo hire-me</button>
           </div>
         </div>
       </div>
@@ -187,10 +191,106 @@
     </div>
   </section>
 
+  <!-- Incident War Room / Attack Graph -->
+  <section id="incident">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <div>
+          <p class="sec-label">04 // incident war room</p>
+          <h2>Interactive Cyber Attack Graph &amp; Containment</h2>
+          <p class="sec-sub">Correlate an ongoing multi-stage intrusion and execute containment playbooks in real-time.</p>
+        </div>
+      </div>
+      <div class="card reveal">
+        <div class="incident-head">
+          <div>
+            <span class="mono" style="color:var(--muted);font-size:12px">CASE FILE #INC-2026-0881</span>
+            <h3 style="margin:4px 0 0;font-size:18px">Operation DarkViper: Endpoint to Domain Controller Intrusion</h3>
+          </div>
+          <span class="incident-status-pill active" id="caseStatusBadge">● ACTIVE INTRUSION</span>
+        </div>
+        <div class="incident-layout">
+          <div>
+            <p class="mono" style="font-size:12px;color:var(--muted);margin:0 0 10px">&gt; ATTACK GRAPH NODES (Click to inspect forensic artifacts):</p>
+            <div class="chain-grid" id="incidentChain"></div>
+          </div>
+          <div class="containment-card">
+            <div>
+              <p class="containment-title">🛡️ Analyst Containment Console</p>
+              <p style="font-size:13px;color:var(--muted);margin:0 0 12px">Execute playbooks to sever attacker persistence and isolate lateral movement vectors.</p>
+              <div class="bar" style="margin-bottom:12px"><i id="containBar" style="width:0%"></i></div>
+              <div class="action-list" id="actionList"></div>
+            </div>
+            <div class="contain-banner" id="containBanner">
+              <strong>🏆 Incident Fully Neutralized!</strong>
+              <p style="margin:6px 0 0;color:var(--muted)">All lateral vectors severed, credentials revoked, and C2 blackholed. Full chain-of-custody report generated for escalation.</p>
+            </div>
+            <div class="card" id="nodeDetailBox" style="padding:14px;background:var(--surface-2);border:1px solid var(--border)">
+              <div class="mono" style="font-size:11.5px;color:var(--accent);margin-bottom:4px" id="nodeDetailTactic">INITIAL ACCESS</div>
+              <h4 style="margin:0 0 6px;font-size:14.5px" id="nodeDetailTitle">Select a node above to inspect forensic artifacts</h4>
+              <p style="font-size:13px;color:var(--muted);margin:0 0 6px" id="nodeDetailDesc">Artifacts, hashes, and process command-lines will appear here.</p>
+              <div class="mono" style="font-size:11.5px;color:var(--accent-2)" id="nodeDetailArtifact"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Mini-Wireshark Packet Inspector -->
+  <section id="packets">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <div>
+          <p class="sec-label">05 // packet inspection</p>
+          <h2>Mini-Wireshark: Network Traffic Analysis</h2>
+          <p class="sec-sub">Inspect packet captures (PCAP) directly in the browser to analyze malicious protocols, flags, and payloads.</p>
+        </div>
+      </div>
+      <div class="card ws-card reveal">
+        <div class="ws-scenarios" id="wsScenarioTabs"></div>
+        <div class="ws-filter-bar">
+          <span class="ws-filter-lbl">Apply Display Filter:</span>
+          <div class="ws-filter-input" id="wsFilterDisplay"></div>
+        </div>
+        <div class="ws-table-wrap">
+          <table class="ws-table">
+            <thead>
+              <tr>
+                <th style="width:48px">No.</th>
+                <th style="width:90px">Time</th>
+                <th style="width:130px">Source</th>
+                <th style="width:130px">Destination</th>
+                <th style="width:70px">Proto</th>
+                <th style="width:60px">Len</th>
+                <th>Info</th>
+              </tr>
+            </thead>
+            <tbody id="wsTableBody"></tbody>
+          </table>
+        </div>
+        <div class="ws-panes">
+          <div class="ws-pane">
+            <h5>Packet Details Tree</h5>
+            <div class="ws-tree" id="wsTreeDissect"></div>
+          </div>
+          <div class="ws-pane">
+            <h5>Packet Bytes (Hex &amp; ASCII)</h5>
+            <pre class="ws-hex" id="wsHexDump"></pre>
+          </div>
+        </div>
+        <div class="ws-analyst">
+          <div><b>Analyst Assessment:</b> <span id="wsAnalystNotes" style="color:var(--muted)"></span></div>
+          <div class="ws-mitigate">⚙ <b>Mitigation:</b> <span id="wsMitigationText"></span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Triage game -->
   <section id="triage">
     <div class="wrap">
-      <div class="sec-head reveal"><div><p class="sec-label">04 // triage lab</p><h2>Can you triage like a SOC analyst?</h2><p class="sec-sub">Read each alert and decide if it's a real threat or a false positive. These are practice scenarios I wrote, not real client data.</p></div></div>
+      <div class="sec-head reveal"><div><p class="sec-label">06 // triage lab</p><h2>Can you triage like a SOC analyst?</h2><p class="sec-sub">Read each alert and decide if it's a real threat or a false positive. These are practice scenarios I wrote, not real client data.</p></div></div>
       <div class="game reveal">
         <div class="card alert-card" id="alertCard">
           <div class="alert-top"><span class="sev" id="aSev"></span><span class="date" id="aMeta"></span></div>
@@ -220,7 +320,7 @@
   <!-- Phish hunt -->
   <section id="phishing">
     <div class="wrap">
-      <div class="sec-head reveal"><div><p class="sec-label">05 // phish hunt</p><h2>Spot the phishing red flags</h2><p class="sec-sub">This email landed in a user's inbox. Click every suspicious part you can find. Hover over the button before you trust it.</p></div></div>
+      <div class="sec-head reveal"><div><p class="sec-label">07 // phish hunt</p><h2>Spot the phishing red flags</h2><p class="sec-sub">This email landed in a user's inbox. Click every suspicious part you can find. Hover over the button before you trust it.</p></div></div>
       <div class="phish reveal">
         <div class="card mail" id="mail">
           <div class="mail-head">
@@ -258,7 +358,7 @@
   <section id="skills">
     <div class="wrap">
       <div class="sec-head reveal">
-        <div><p class="sec-label">06 // skills</p><h2>Tools &amp; technical skills</h2></div>
+        <div><p class="sec-label">08 // skills</p><h2>Tools &amp; technical skills</h2></div>
         <div class="filters" id="filters">
           <button class="on" data-f="all">all</button><button data-f="siem">siem</button><button data-f="endpoint">endpoint</button><button data-f="network">network</button><button data-f="os">os</button><button data-f="code">code</button>
         </div>
@@ -270,7 +370,7 @@
   <!-- Certifications -->
   <section id="certifications">
     <div class="wrap">
-      <div class="sec-head reveal"><div><p class="sec-label">07 // certifications</p><h2>Certifications</h2><p class="sec-sub">Tap a card to flip it.</p></div></div>
+      <div class="sec-head reveal"><div><p class="sec-label">09 // certifications</p><h2>Certifications</h2><p class="sec-sub">Tap a card to flip it.</p></div></div>
       <div class="certs">
         <div class="flip reveal" tabindex="0" role="button" aria-label="Flip CompTIA Security+ card">
           <div class="flip-inner">
@@ -291,7 +391,7 @@
   <!-- Projects -->
   <section id="projects">
     <div class="wrap">
-      <div class="sec-head reveal"><div><p class="sec-label">08 // projects</p><h2>Projects</h2></div></div>
+      <div class="sec-head reveal"><div><p class="sec-label">10 // projects</p><h2>Projects</h2></div></div>
       <div class="projects">
         <article class="card proj reveal">
           <div class="proj-banner bnr-1">
@@ -327,7 +427,7 @@
   <!-- Education -->
   <section id="education">
     <div class="wrap">
-      <div class="sec-head reveal"><div><p class="sec-label">09 // education</p><h2>Education</h2></div></div>
+      <div class="sec-head reveal"><div><p class="sec-label">11 // education</p><h2>Education</h2></div></div>
       <div class="edu">
         <div class="card edu-item lift reveal">
           <div class="date">Oct 2021 – Feb 2025</div>
@@ -349,7 +449,7 @@
   <section id="contact">
     <div class="wrap">
       <div class="card contact reveal">
-        <p class="sec-label">10 // contact</p>
+        <p class="sec-label">12 // contact</p>
         <h2>Let's secure something together</h2>
         <p>Happy to connect about SOC, threat detection and cybersecurity, whether that's collaboration, knowledge sharing or future opportunities.</p>
         <div class="contact-grid">

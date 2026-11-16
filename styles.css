@@ -49,20 +49,22 @@ header.nav { position: sticky; top: 0; z-index: 20; background: color-mix(in srg
 .brand { font-family: var(--mono); font-weight: 700; color: var(--text); font-size: 15px; white-space: nowrap; }
 .brand span { color: var(--accent); }
 .nav ul { display: flex; gap: 4px; list-style: none; margin: 0; padding: 0; }
-.nav ul a { color: var(--muted); font-size: 14px; font-weight: 500; padding: 6px 12px; border-radius: 8px; transition: .2s; }
+.nav ul a { color: var(--muted); font-size: 13.5px; font-weight: 500; padding: 6px 10px; border-radius: 8px; transition: .2s; }
 .nav ul a::before { content: ">"; font-family: var(--mono); color: var(--accent); margin-right: 5px; opacity: 0; transition: opacity .2s; }
 .nav ul a:hover::before, .nav ul a.active::before { opacity: 1; }
 .nav ul a:hover, .nav ul a.active { color: var(--text); background: var(--surface-2); text-decoration: none; }
 .nav ul a.active { color: var(--accent); }
-.nav-actions { display: flex; gap: 8px; }
-.theme-btn, .menu-btn { border: 1px solid var(--border); background: var(--surface); color: var(--text); width: 38px; height: 38px; border-radius: 10px; cursor: pointer; font-size: 16px; flex-shrink: 0; transition: transform .3s, border-color .2s; }
-.theme-btn:hover { transform: rotate(180deg); border-color: var(--accent); }
+.nav-actions { display: flex; gap: 8px; align-items: center; }
+.theme-btn, .audio-btn, .menu-btn { border: 1px solid var(--border); background: var(--surface); color: var(--text); width: 38px; height: 38px; border-radius: 10px; cursor: pointer; font-size: 16px; flex-shrink: 0; transition: transform .3s, border-color .2s, color .2s, box-shadow .2s; display: grid; place-items: center; }
+.theme-btn:hover, .audio-btn:hover { border-color: var(--accent); }
+.theme-btn:hover { transform: rotate(180deg); }
+.audio-btn.on { color: var(--accent); border-color: var(--accent); box-shadow: 0 0 10px var(--glow); }
 .menu-btn { display: none; place-content: center; gap: 4px; }
 .menu-btn span { display: block; width: 18px; height: 2px; border-radius: 2px; background: var(--accent); box-shadow: 0 0 6px var(--accent); transition: transform .3s, opacity .3s; }
 .menu-btn.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
 .menu-btn.open span:nth-child(2) { opacity: 0; }
 .menu-btn.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
-@media (max-width: 1020px) {
+@media (max-width: 1040px) {
   .menu-btn { display: grid; }
   .nav ul { position: absolute; top: 62px; left: 0; right: 0; flex-direction: column; gap: 2px; padding: 10px 16px 18px; background: var(--bg); border-bottom: 1px solid var(--border); box-shadow: 0 20px 40px rgba(0,0,0,.3); opacity: 0; visibility: hidden; transform: translateY(-10px); transition: .25s; }
   .nav ul.open { opacity: 1; visibility: visible; transform: none; }
@@ -171,6 +173,66 @@ h2::after { content: ""; display: block; width: 56px; height: 3px; margin-top: 1
 .step-detail h4 { margin: 0 0 6px; color: var(--text); font-size: 17px; }
 .step-detail p { margin: 0 0 10px; }
 .step-detail .tools { font-family: var(--mono); font-size: 12.5px; color: var(--accent); }
+
+/* Incident War Room / Attack Graph */
+.incident-layout { display: grid; grid-template-columns: 1.4fr 1fr; gap: 18px; }
+@media (max-width: 960px) { .incident-layout { grid-template-columns: 1fr; } }
+.incident-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
+.incident-status-pill { font-family: var(--mono); font-size: 12px; font-weight: 700; padding: 5px 12px; border-radius: 999px; letter-spacing: .05em; }
+.incident-status-pill.active { background: color-mix(in srgb, var(--crit) 18%, transparent); color: var(--crit); border: 1px solid var(--crit); animation: pulse 1.8s infinite; }
+.incident-status-pill.contained { background: var(--accent-soft); color: var(--accent); border: 1px solid var(--accent); }
+.chain-grid { display: grid; gap: 14px; }
+.incident-node { padding: 16px 18px; border-radius: 12px; background: var(--surface-2); border: 1px solid var(--border); transition: all .3s; cursor: pointer; position: relative; }
+.incident-node:hover { border-color: var(--accent); }
+.incident-node.active-node { box-shadow: 0 0 0 2px var(--accent); }
+.incident-node.compromised { border-left: 4px solid var(--crit); }
+.incident-node.contained { border-left: 4px solid var(--accent); background: color-mix(in srgb, var(--accent) 7%, var(--surface-2)); }
+.incident-node-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; flex-wrap: wrap; gap: 6px; }
+.incident-node-top h4 { margin: 0; font-size: 15.5px; }
+.node-tactic { font-family: var(--mono); font-size: 11.5px; color: var(--muted); }
+.node-host { font-family: var(--mono); font-size: 12px; color: var(--accent-2); margin-bottom: 6px; }
+.node-desc { font-size: 13.5px; color: var(--muted); margin: 0 0 8px; }
+.node-badge { display: inline-flex; align-items: center; gap: 5px; font-family: var(--mono); font-size: 11px; padding: 2px 8px; border-radius: 4px; }
+.incident-node.compromised .node-badge { background: color-mix(in srgb, var(--crit) 15%, transparent); color: var(--crit); }
+.incident-node.contained .node-badge { background: var(--accent-soft); color: var(--accent); }
+.containment-card { display: flex; flex-direction: column; gap: 16px; }
+.containment-title { font-family: var(--mono); font-size: 13px; color: var(--accent); margin: 0 0 4px; text-transform: uppercase; letter-spacing: .08em; }
+.action-list { display: grid; gap: 10px; }
+.action-btn { width: 100%; text-align: left; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface-2); color: var(--text); font-family: inherit; cursor: pointer; transition: all .2s; }
+.action-btn:hover:not(:disabled) { border-color: var(--accent); transform: translateX(3px); }
+.action-btn.done { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); cursor: default; }
+.action-btn b { display: block; font-size: 14px; margin-bottom: 2px; }
+.action-btn span { font-size: 12.5px; color: var(--muted); display: block; }
+.action-btn.done span { color: var(--accent); opacity: .85; }
+.contain-banner { padding: 14px; border-radius: 10px; font-size: 13.5px; background: var(--accent-soft); border: 1px solid var(--accent); display: none; }
+.contain-banner.show { display: block; animation: pop .3s ease; }
+
+/* Packet Inspector / Mini-Wireshark */
+.ws-card { padding: 0; overflow: hidden; }
+.ws-scenarios { display: flex; gap: 8px; padding: 14px 18px; border-bottom: 1px solid var(--border); background: var(--surface-2); flex-wrap: wrap; }
+.ws-tab { font-family: var(--mono); font-size: 12.5px; padding: 6px 14px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--muted); cursor: pointer; transition: .2s; }
+.ws-tab:hover { color: var(--text); border-color: var(--accent); }
+.ws-tab.on { background: var(--accent); color: #04140d; border-color: var(--accent); font-weight: 600; }
+.ws-filter-bar { display: flex; align-items: center; gap: 10px; padding: 10px 18px; border-bottom: 1px solid var(--border); background: color-mix(in srgb, var(--surface) 90%, transparent); font-family: var(--mono); font-size: 12.5px; }
+.ws-filter-lbl { color: var(--accent); font-weight: 700; }
+.ws-filter-input { flex: 1; padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface-2); color: var(--accent-2); font-family: var(--mono); font-size: 12px; overflow-x: auto; white-space: nowrap; }
+.ws-table-wrap { max-height: 220px; overflow-y: auto; overflow-x: auto; scrollbar-width: thin; }
+.ws-table { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 12px; text-align: left; }
+.ws-table th { position: sticky; top: 0; background: var(--surface-2); color: var(--muted); padding: 8px 12px; border-bottom: 1px solid var(--border); font-weight: 600; z-index: 2; }
+.ws-table td { padding: 7px 12px; border-bottom: 1px solid color-mix(in srgb, var(--border) 40%, transparent); color: var(--text); white-space: nowrap; cursor: pointer; }
+.ws-table tr:hover td { background: color-mix(in srgb, var(--accent) 8%, transparent); }
+.ws-table tr.active td { background: color-mix(in srgb, var(--accent) 18%, transparent); color: var(--accent); font-weight: 600; }
+.ws-panes { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--border); }
+@media (max-width: 860px) { .ws-panes { grid-template-columns: 1fr; } }
+.ws-pane { padding: 16px 18px; font-family: var(--mono); font-size: 12px; }
+.ws-pane:first-child { border-right: 1px solid var(--border); }
+@media (max-width: 860px) { .ws-pane:first-child { border-right: 0; border-bottom: 1px solid var(--border); } }
+.ws-pane h5 { margin: 0 0 10px; font-size: 12.5px; color: var(--accent); text-transform: uppercase; letter-spacing: .06em; }
+.ws-tree { white-space: pre-wrap; line-height: 1.6; color: var(--muted); }
+.ws-hex { font-family: var(--mono); font-size: 11px; line-height: 1.5; color: var(--muted); white-space: pre; overflow-x: auto; background: var(--surface-2); padding: 10px 12px; border-radius: 6px; border: 1px solid var(--border); }
+.ws-analyst { padding: 16px 18px; border-top: 1px solid var(--border); background: var(--surface-2); font-size: 13.5px; display: grid; gap: 8px; }
+.ws-analyst b { color: var(--text); }
+.ws-mitigate { font-family: var(--mono); font-size: 12px; color: var(--accent); }
 
 /* Triage game */
 .game { display: grid; grid-template-columns: 1.4fr 1fr; gap: 16px; }
@@ -355,7 +417,7 @@ html { scrollbar-color: color-mix(in srgb, var(--accent) 55%, transparent) var(-
 
 /* Print: clean one-column resume layout */
 @media print {
-  #boot, #progress, .scanlines, .cur-ring, .cur-dot, header.nav, #rain, #net, .term, #workflow, #triage, #phishing, #toTop, #toast,
+  #boot, #progress, .scanlines, .cur-ring, .cur-dot, header.nav, #rain, #net, .term, #workflow, #incident, #packets, #triage, #phishing, #toTop, #toast,
   .filters, .hint, .cta, .ascii, .uptime, .proj-banner, .sec-sub, .status, .flip-back, .role, .meter { display: none !important; }
   .print-only { display: block; margin: 0 0 10px; font-family: var(--mono); font-size: 10pt; color: #0a7a4d; }
   .sec-head, h2, h3 { break-after: avoid; page-break-after: avoid; }
