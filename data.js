@@ -50,11 +50,26 @@ window.PORTFOLIO_DATA = {
     typo: ['Spelling mistakes', '"immediatly" and "pasword". Sloppy writing is a classic sign of phishing.']
   },
   skills: [
-    ['Stellar Cyber', 'siem', 2, 'basic'], ['RSA NetWitness', 'siem', 2, 'basic'], ['Wireshark', 'network', 2, 'basic'],
-    ['Bitdefender', 'endpoint', 2, 'basic'], ['Trend Micro DSM', 'endpoint', 2, 'basic'],
-    ['Palo Alto', 'network', 2, 'basic'], ['FortiWeb WAF', 'network', 2, 'basic'], ['Sangfor Firewall', 'network', 2, 'basic'], ['MikroTik RouterOS', 'network', 3, 'certified (MTCNA)'],
-    ['Kali Linux', 'os', 3, 'intermediate'], ['Windows', 'os', 3, 'intermediate'],
-    ['Python', 'code', 2, 'basic'], ['Java', 'code', 2, 'basic'], ['C++', 'code', 2, 'basic'], ['Solidity', 'code', 2, 'basic'], ['Arduino IDE', 'code', 3, 'intermediate']
+    ['Security Onion', 'siem', 3, 'production'],
+    ['Elasticsearch', 'siem', 3, 'production'],
+    ['Stellar Cyber', 'siem', 3, 'production'],
+    ['RSA NetWitness', 'siem', 2, 'hands-on'],
+    ['Wireshark', 'network', 3, 'proficient'],
+    ['Suricata / Zeek', 'network', 2, 'hands-on'],
+    ['Palo Alto', 'network', 2, 'production'],
+    ['FortiWeb WAF', 'network', 2, 'production'],
+    ['Sangfor Firewall', 'network', 2, 'production'],
+    ['MikroTik RouterOS', 'network', 3, 'certified (MTCNA)'],
+    ['Bitdefender EDR', 'endpoint', 2, 'production'],
+    ['Trend Micro DSM', 'endpoint', 2, 'production'],
+    ['Sysmon', 'endpoint', 2, 'hands-on'],
+    ['Kali Linux', 'os', 3, 'intermediate'],
+    ['Windows', 'os', 3, 'intermediate'],
+    ['Python', 'code', 3, 'automation'],
+    ['Java', 'code', 2, 'foundational'],
+    ['C++', 'code', 2, 'foundational'],
+    ['Solidity', 'code', 2, 'foundational'],
+    ['Arduino IDE', 'code', 3, 'intermediate']
   ],
   pcapScenarios: [
     {

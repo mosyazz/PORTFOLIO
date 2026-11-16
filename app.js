@@ -428,15 +428,36 @@
     body.scrollTop = body.scrollHeight;
   };
 
+  /* SOC Defense Sandbox Tab Navigation */
+  function switchLabPane(paneId, scroll = false) {
+    const tabs = $$('#labNav .lab-tab');
+    const panes = $$('.lab-pane');
+    tabs.forEach(t => {
+      const active = t.dataset.pane === paneId;
+      t.classList.toggle('on', active);
+      t.setAttribute('aria-selected', String(active));
+    });
+    panes.forEach(p => {
+      p.classList.toggle('active', p.id === paneId);
+    });
+    if (scroll) {
+      const target = $('#labs');
+      if (target) {
+        target.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
+      }
+    }
+  }
+
   const cmds = {
-    help: () => print('<span class="c">available commands:</span>\n  <span class="k">whoami</span>      who is this analyst\n  <span class="k">incident</span>    open the Incident War Room attack graph\n  <span class="k">packets</span>     open the Mini-Wireshark PCAP inspector\n  <span class="k">triage</span>      jump to the Triage Lab\n  <span class="k">phish</span>       jump to the Phish Hunt\n  <span class="k">skills</span>      tools &amp; tech stack\n  <span class="k">experience</span>  work history\n  <span class="k">certs</span>       certifications\n  <span class="k">education</span>   academic background\n  <span class="k">projects</span>    things I built\n  <span class="k">scan</span>        run a (fake) threat scan\n  <span class="k">nmap</span>        scan this portfolio\n  <span class="k">whois</span>       lookup the analyst\n  <span class="k">ping</span>        check if I\'m available\n  <span class="k">audio</span>       toggle cyber sound FX\n  <span class="k">contact</span>     get in touch\n  <span class="k">resume</span>      download my resume\n  <span class="k">print</span>       print-friendly resume view\n  <span class="k">theme</span>       toggle light/dark\n  <span class="k">history</span>     past commands\n  <span class="k">clear</span>       clear the screen\n<span class="c">psst… there are hidden commands too 👀</span>'),
+    help: () => print('<span class="c">available commands:</span>\n  <span class="k">whoami</span>      who is this analyst\n  <span class="k">labs</span>        open SOC Defense Sandbox (all 4 interactive labs)\n  <span class="k">incident</span>    open the Incident War Room attack graph\n  <span class="k">packets</span>     open the Mini-Wireshark PCAP inspector\n  <span class="k">triage</span>      jump to the Triage Lab\n  <span class="k">phish</span>       jump to the Phish Hunt\n  <span class="k">skills</span>      tools &amp; tech stack\n  <span class="k">experience</span>  work history\n  <span class="k">certs</span>       certifications\n  <span class="k">education</span>   academic background\n  <span class="k">projects</span>    things I built\n  <span class="k">scan</span>        run a (fake) threat scan\n  <span class="k">nmap</span>        scan this portfolio\n  <span class="k">whois</span>       lookup the analyst\n  <span class="k">ping</span>        check if I\'m available\n  <span class="k">audio</span>       toggle cyber sound FX\n  <span class="k">contact</span>     get in touch\n  <span class="k">resume</span>      download my resume\n  <span class="k">print</span>       print-friendly resume view\n  <span class="k">theme</span>       toggle light/dark\n  <span class="k">history</span>     past commands\n  <span class="k">clear</span>       clear the screen\n<span class="c">psst… there are hidden commands too 👀</span>'),
     whoami: () => print('<span class="s">Mohamad Syazwan Mohd Shukri</span>\nSOC Analyst @ BitRanger Sdn. Bhd. · Penang, MY\nK-Youth Development Programme, Khazanah Nasional\nBIT (Hons.) Computer System Security @ UniKL MIIT\nEx-SOC intern @ Heitech Padu Berhad'),
-    incident: () => { print('opening Incident War Room attack graph...'); location.hash = 'incident'; },
-    packets: () => { print('opening Mini-Wireshark PCAP inspector...'); location.hash = 'packets'; },
-    skills: () => print('<span class="k">siem</span>     : Stellar Cyber, RSA NetWitness\n<span class="k">edr</span>      : Bitdefender, Trend Micro DSM\n<span class="k">firewall</span> : Palo Alto, Sangfor, Huawei, FortiWeb WAF\n<span class="k">network</span>  : MikroTik RouterOS, Wireshark\n<span class="k">os</span>       : Kali Linux, Windows\n<span class="k">code</span>     : Python, Java, C++, Solidity'),
-    experience: () => print('<span class="s">[Aug 2026 – Present]</span>  SOC Analyst @ BitRanger Sdn. Bhd. (CyRes, USM)\n  › K-Youth Development Programme, Khazanah Nasional\n<span class="s">[Oct 2024 – Feb 2025]</span> SOC Analyst Intern @ Heitech Padu Berhad\n  › SIEM alert monitoring, IOC threat hunting, firewall/WAF blocking\n<span class="s">[Mar 2021 – Jul 2021]</span> Telecom Drafter Intern @ ECHO Broadband\n  › Fiber optic network drafting, SLDs'),
+    labs: () => { print('jumping to SOC Defense Sandbox...'); switchLabPane('pane-incident', true); },
+    incident: () => { print('opening Incident War Room attack graph...'); switchLabPane('pane-incident', true); },
+    packets: () => { print('opening Mini-Wireshark PCAP inspector...'); switchLabPane('pane-packets', true); },
+    skills: () => print('<span class="k">siem</span>     : Stellar Cyber, RSA NetWitness, Security Onion, Elasticsearch\n<span class="k">edr</span>      : Bitdefender, Trend Micro DSM\n<span class="k">ids/suricata</span> : Suricata, Zeek, Sysmon\n<span class="k">firewall</span> : Palo Alto, Sangfor, Huawei, FortiWeb WAF\n<span class="k">network</span>  : MikroTik RouterOS, Wireshark\n<span class="k">os</span>       : Kali Linux, Ubuntu, Windows\n<span class="k">code</span>     : Python, Java, C++, Solidity'),
+    experience: () => print('<span class="s">[Aug 2026 – Present]</span>  SOC Analyst @ BitRanger Sdn. Bhd. (CyRes, USM)\n  › Architected OwlSight MRA & Security Onion data pipeline across 3 enterprise client networks (MBPP, PDC, USM)\n  › K-Youth Development Programme, Khazanah Nasional\n<span class="s">[Oct 2024 – Feb 2025]</span> SOC Analyst Intern @ Heitech Padu Berhad\n  › SIEM alert monitoring, IOC threat hunting, firewall/WAF blocking\n<span class="s">[Mar 2021 – Jul 2021]</span> Telecom Drafter Intern @ ECHO Broadband\n  › Fiber optic network drafting, SLDs'),
     certs: () => print('<span class="p">✓</span> CompTIA Security+  <span class="c">(Dec 2023)</span>\n<span class="p">✓</span> MikroTik MTCNA     <span class="c">(Dec 2020)</span>'),
-    education: () => print('BIT (Hons.) Computer System Security, UniKL MIIT · CGPA 3.50\nDiploma Electronic Eng. (Data Transmission &amp; Networking), MJII · CGPA 3.55'),
+    education: () => print('BIT (Hons.) Computer System Security, UniKL MIIT · CGPA 3.50 (7× Dean\'s List)\nDiploma Electronic Eng. (Data Transmission &amp; Networking), MJII · CGPA 3.55'),
     projects: () => print('› <b style="color:var(--accent)">OwlSight MRA (BitRanger Sdn. Bhd.)</b>\n  SOC automation platform integrating Security Onion & Elasticsearch with on-premise AI assistance.\n  Interactive Tour: <a href="owlsight-tour.html" target="_blank" rel="noopener noreferrer">mosyaz.my/owlsight-tour.html</a>\n› Crowdfunding Using Blockchain (Solidity, MetaMask, OWASP hardening)\n› Smart Dustbin with ESP32 & IoT (Blynk, ultrasonic sensor)'),
     contact: () => print('email    : <a href="mailto:syazwanshkri1@gmail.com">syazwanshkri1@gmail.com</a>\nlinkedin : <a href="https://www.linkedin.com/in/syazwan-shukri/" target="_blank" rel="noopener noreferrer">linkedin.com/in/syazwan-shukri</a>'),
     resume: () => {
@@ -446,7 +467,7 @@
       a.download = '';
       a.click();
     },
-    triage: () => { print('opening Triage Lab...'); location.hash = 'triage'; },
+    triage: () => { print('opening Triage Lab...'); switchLabPane('pane-triage', true); },
     theme: () => { themeBtn.click(); print('theme → ' + root.dataset.theme); },
     audio: () => { audioBtn.click(); print('audio → ' + (audio.enabled ? 'ON' : 'MUTED')); },
     clear: () => { out.innerHTML = ''; },
@@ -505,7 +526,7 @@
     motd: () => cmds['cat /etc/motd'](),
     date: () => print(escHtml(new Date().toString())),
     echo: args => print(escHtml(args || '')),
-    phish: () => { print('opening Phish Hunt...'); location.hash = 'phishing'; },
+    phish: () => { print('opening Phish Hunt...'); switchLabPane('pane-phishing', true); },
     print: () => { print('opening print view...'); setTimeout(() => window.print(), 300); },
     exit: () => print('logout... just kidding, an analyst never leaves mid-shift 😄'),
     matrix: () => { print('<span class="p">wake up, analyst...</span>'); matrixBurst(); },
@@ -710,6 +731,37 @@
     flow.appendChild(b);
   });
   showStep(0);
+
+  /* Lab Navigation Tabs & Deep Links */
+  $$('#labNav .lab-tab').forEach(btn => {
+    btn.onclick = () => {
+      audio.click();
+      switchLabPane(btn.dataset.pane);
+    };
+  });
+
+  const handleLabHash = () => {
+    const h = (location.hash || '').replace('#', '').toLowerCase();
+    const map = {
+      incident: 'pane-incident',
+      'pane-incident': 'pane-incident',
+      packets: 'pane-packets',
+      'pane-packets': 'pane-packets',
+      triage: 'pane-triage',
+      'pane-triage': 'pane-triage',
+      phish: 'pane-phishing',
+      phishing: 'pane-phishing',
+      'pane-phishing': 'pane-phishing',
+      labs: 'pane-incident'
+    };
+    if (map[h]) {
+      switchLabPane(map[h], true);
+    }
+  };
+  window.addEventListener('hashchange', handleLabHash);
+  if (location.hash) {
+    setTimeout(handleLabHash, 100);
+  }
 
   /* Feature 1: Interactive Incident War Room / Attack Graph */
   const incidentChainEl = $('#incidentChain');
@@ -953,16 +1005,16 @@
   };
   startGame();
 
-  /* Triage Lab keyboard shortcuts when section is visible */
+  /* Triage Lab keyboard shortcuts when section is visible and active */
   let triageVisible = false;
-  const triageSec = $('#triage');
+  const triageSec = $('#pane-triage');
   if (triageSec && 'IntersectionObserver' in window) {
     new IntersectionObserver(entries => {
       triageVisible = entries[0].isIntersecting;
-    }, { threshold: 0.25 }).observe(triageSec);
+    }, { threshold: 0.15 }).observe(triageSec);
   }
   addEventListener('keydown', e => {
-    if (!triageVisible || e.ctrlKey || e.metaKey || e.altKey) return;
+    if (!triageVisible || !triageSec || !triageSec.classList.contains('active') || e.ctrlKey || e.metaKey || e.altKey) return;
     if (e.target && e.target.closest('input, textarea, select, [contenteditable]')) return;
     const key = e.key.toLowerCase();
     if (!answered && $('#verdictBtns').style.display !== 'none') {

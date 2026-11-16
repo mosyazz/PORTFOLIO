@@ -14,12 +14,14 @@ This is the personal portfolio of **Mohamad Syazwan Mohd Shukri**. I'm a SOC Ana
 
 | Feature | What it does |
 |---|---|
+| 🛡️ **Interactive SOC Sandbox** | Tabbed defensive workspace uniting 4 interactive labs into an efficient single-screen console |
 | ⚔️ **Incident War Room** | Interactive attack graph of a multi-stage APT intrusion with live containment playbooks (EDR isolation, credential revocation, C2 blackholing) |
 | 🔍 **PCAP Inspector** | Mini-Wireshark directly in the browser analyzing DNS tunneling, TCP SYN scans, and cleartext credential leaks with hex dumps |
-| 🔊 **Tactical Cyber Audio** | Web Audio API synthesizer for tactile mechanical keyboard clicks, alert alerts, and containment cues (100% zero-asset, zero-tracker) |
-| 💻 **Interactive terminal** | Type commands like `help`, `whoami`, `nmap`, `whois`, `incident`, `packets` and `scan` to explore my profile |
 | 🚨 **Triage Lab** | Classify 8 simulated SOC alerts as true or false positives, with MITRE ATT&CK mapping for each |
 | 🎣 **Phish Hunt** | Find all 8 red flags in a fictional phishing email |
+| 🦉 **OwlSight MRA Tour** | Interactive walkthrough of the flagship SOC automation platform integrating Security Onion, Elasticsearch & AI triage |
+| 🔊 **Tactical Cyber Audio** | Web Audio API synthesizer for tactile mechanical keyboard clicks, alert alerts, and containment cues (100% zero-asset, zero-tracker) |
+| 💻 **Interactive terminal** | Type commands like `help`, `whoami`, `nmap`, `whois`, `labs`, `incident`, `packets` and `scan` to explore my profile |
 | 🔄 **SOC workflow** | Step through how I handle an alert, from monitoring to report |
 | 🖨️ **Print view** | Press `Ctrl+P` for a clean one-page resume layout |
 
