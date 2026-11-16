@@ -25,6 +25,7 @@ All alert and phishing scenarios are fictional training examples. None of them c
 ## 🔐 Security by design
 
 - **Static site.** There's no backend, database or login, so the attack surface is minimal.
+- **Strict Content Security Policy (CSP).** No inline scripts or inline style attributes; scripts and styles are served from `'self'`.
 - **HTTPS enforced** with a Let's Encrypt certificate, served by GitHub Pages.
 - **Domain verified** on GitHub to prevent subdomain or domain takeover.
 - **Minimal DNS.** Unused records like MX and FTP were removed.
@@ -33,10 +34,13 @@ All alert and phishing scenarios are fictional training examples. None of them c
 
 ## 🧰 Built with
 
-Plain HTML, CSS and vanilla JavaScript, all in a single `index.html` with no framework or build step. Fonts come from Google Fonts (Inter, JetBrains Mono and Orbitron), and the site is hosted on GitHub Pages with a custom domain.
+Plain HTML, CSS and vanilla JavaScript with no framework or build step. Fonts come from Google Fonts (Inter, JetBrains Mono and Orbitron), and the site is hosted on GitHub Pages with a custom domain.
 
 ```
-├── index.html                  # the whole site
+├── index.html                  # markup, metadata & strict CSP
+├── styles.css                  # theme, layout, animations & print view
+├── data.js                     # alerts, phish flags, skills & workflow data
+├── app.js                      # terminal, labs & canvas effects
 ├── og-image.png                # social link preview
 ├── RESUME_SYAZWAN_SHUKRI.pdf   # public resume
 └── CNAME                       # custom domain: mosyaz.my
