@@ -3,6 +3,7 @@
 [![Live site](https://img.shields.io/badge/live-mosyaz.my-3ddc97?style=for-the-badge&logo=githubpages&logoColor=white)](https://mosyaz.my)
 [![Security+](https://img.shields.io/badge/CompTIA-Security%2B-c8202f?style=for-the-badge)](https://mosyaz.my/#certifications)
 [![MTCNA](https://img.shields.io/badge/MikroTik-MTCNA-293239?style=for-the-badge)](https://mosyaz.my/#certifications)
+[![Cisco NetAcad](https://img.shields.io/badge/Cisco_NetAcad-CCNAv7-049fd9?style=for-the-badge&logo=cisco&logoColor=white)](https://mosyaz.my/#certifications)
 
 This is the personal portfolio of **Mohamad Syazwan Mohd Shukri**. I'm a SOC Analyst at BitRanger Sdn. Bhd. through Khazanah Nasional's K-Youth Development Programme.
 
