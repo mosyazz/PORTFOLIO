@@ -44,6 +44,7 @@ Plain HTML, CSS and vanilla JavaScript with no framework or build step. Fonts co
 ├── styles.css                  # theme, layout, animations & print view
 ├── data.js                     # alerts, phish flags, skills & workflow data
 ├── app.js                      # terminal, labs & canvas effects
+├── owlsight-tour.html          # interactive OwlSight MRA platform tour
 ├── og-image.png                # social link preview
 ├── RESUME_SYAZWAN_SHUKRI.pdf   # public resume
 └── CNAME                       # custom domain: mosyaz.my

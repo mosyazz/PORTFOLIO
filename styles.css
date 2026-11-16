@@ -334,10 +334,12 @@ h2::after { content: ""; display: block; width: 56px; height: 3px; margin-top: 1
 .flip-back p { margin: 0 0 12px; color: var(--muted); font-size: 14.5px; }
 
 /* Projects */
-.projects { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.projects { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 18px; }
 @media (max-width: 760px) { .projects { grid-template-columns: 1fr; } }
 .proj { transform-style: preserve-3d; transition: transform .15s ease-out, border-color .25s; }
+.proj.featured { grid-column: 1 / -1; }
 .proj-banner { height: 150px; margin: -24px -24px 22px; display: grid; place-items: center; overflow: hidden; border-bottom: 1px solid var(--border); background: var(--bnr); }
+.proj-banner.bnr-owlsight { --bnr: radial-gradient(circle at 50% 20%, color-mix(in srgb, #f5b73d 28%, transparent), transparent 70%), linear-gradient(135deg, color-mix(in srgb, var(--accent) 18%, var(--surface)), var(--surface)); }
 .proj-banner.bnr-1 { --bnr: radial-gradient(circle at 30% 20%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 70%), linear-gradient(135deg, color-mix(in srgb, var(--accent-2) 14%, var(--surface)), var(--surface)); }
 .proj-banner.bnr-2 { --bnr: radial-gradient(circle at 70% 20%, color-mix(in srgb, var(--warn) 18%, transparent), transparent 70%), linear-gradient(135deg, color-mix(in srgb, var(--accent) 12%, var(--surface)), var(--surface)); }
 .proj-banner::after { content: ""; position: absolute; inset: 0; background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px); background-size: 24px 24px; opacity: .5; -webkit-mask: radial-gradient(circle at center, #000, transparent 75%); mask: radial-gradient(circle at center, #000, transparent 75%); }
