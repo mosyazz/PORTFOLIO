@@ -335,8 +335,12 @@ h2::after { content: ""; display: block; width: 56px; height: 3px; margin-top: 1
 .flip-back .tags { margin-top: 0; }
 .cert-front { display: flex; flex-direction: row; justify-content: flex-start; gap: 20px; align-items: center; }
 .print-only { display: none; }
-.badge { flex-shrink: 0; width: 76px; height: 76px; border-radius: 18px; display: grid; place-items: center; font-family: var(--mono); font-weight: 700; font-size: 15px; color: var(--accent); background: var(--accent-soft); border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent); box-shadow: 0 0 30px var(--glow); }
-.badge.cisco { color: #049fd9; background: color-mix(in srgb, #049fd9 12%, transparent); border-color: color-mix(in srgb, #049fd9 35%, transparent); box-shadow: 0 0 30px color-mix(in srgb, #049fd9 15%, transparent); }
+.badge { flex-shrink: 0; width: 76px; height: 76px; border-radius: 18px; display: grid; place-items: center; font-family: var(--mono); font-weight: 700; font-size: 15px; color: var(--accent); background: var(--surface-2); border: 1px solid var(--border); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25); overflow: hidden; padding: 10px; }
+.badge.sec-plus { background: color-mix(in srgb, #c8202f 12%, transparent); border-color: color-mix(in srgb, #c8202f 35%, transparent); box-shadow: 0 0 30px color-mix(in srgb, #c8202f 18%, transparent); }
+.badge.mtcna { background: color-mix(in srgb, var(--accent) 12%, transparent); border-color: color-mix(in srgb, var(--accent) 35%, transparent); box-shadow: 0 0 30px color-mix(in srgb, var(--accent) 18%, transparent); }
+.badge.cisco { background: color-mix(in srgb, #049fd9 12%, transparent); border-color: color-mix(in srgb, #049fd9 35%, transparent); box-shadow: 0 0 30px color-mix(in srgb, #049fd9 18%, transparent); }
+.badge-img { width: 100%; height: 100%; object-fit: contain; display: block; filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.35)); }
+.badge-svg { width: 44px; height: 44px; display: block; filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.35)); }
 .certs-academy { grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr)); }
 .cert h3 { margin: 0; font-size: 18px; }
 .cert .issuer { font-size: 13.5px; color: var(--muted); margin: 4px 0 0; }
