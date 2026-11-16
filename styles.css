@@ -38,7 +38,7 @@ a:hover { text-decoration: underline; }
 #boot.done { opacity: 0; visibility: hidden; }
 #boot .ln { white-space: pre-wrap; opacity: .9; }
 #boot .ok { color: #3ddc97; } #boot .dim { color: #5d6b7a; }
-#boot .skip { position: absolute; top: 16px; right: 20px; color: #5d6b7a; font-size: 12px; }
+#boot .skip { position: absolute; top: 20px; right: 24px; z-index: 10; color: #7e8d9f; font-size: 12px; font-family: var(--mono); background: rgba(13, 20, 28, 0.75); border: 1px solid rgba(61, 220, 151, 0.2); padding: 5px 12px; border-radius: 4px; letter-spacing: 0.3px; pointer-events: none; }
 
 /* Progress bar */
 #progress { position: fixed; top: 0; left: 0; height: 3px; width: 0; z-index: 50; background: linear-gradient(90deg, var(--accent), var(--accent-2)); box-shadow: 0 0 12px var(--accent); }
@@ -391,7 +391,7 @@ footer b { color: var(--accent); font-weight: 500; }
 #rain { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; opacity: .14; }
 :root[data-theme="light"] #rain { opacity: .07; }
 #bootRain { position: absolute; inset: 0; width: 100%; height: 100%; opacity: .22; }
-#boot > div, #boot .skip { position: relative; z-index: 1; }
+#boot > div { position: relative; z-index: 1; }
 .fx-canvas { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 90; }
 .fx-canvas.matrix-burst { background: #05080c; transition: opacity .6s; }
 .fx-canvas.fade-out { opacity: 0; }
