@@ -430,15 +430,18 @@
 
   /* SOC Defense Sandbox Tab Navigation */
   function switchLabPane(paneId, scroll = false) {
+    if (!paneId) return;
+    const targetId = paneId.startsWith('pane-') ? paneId : `pane-${paneId}`;
+    const rawKey = targetId.replace('pane-', '');
     const tabs = $$('#labNav .lab-tab');
     const panes = $$('.lab-pane');
     tabs.forEach(t => {
-      const active = t.dataset.pane === paneId;
+      const active = (t.dataset.pane === targetId) || (t.dataset.tab === rawKey);
       t.classList.toggle('on', active);
       t.setAttribute('aria-selected', String(active));
     });
     panes.forEach(p => {
-      p.classList.toggle('active', p.id === paneId);
+      p.classList.toggle('active', p.id === targetId);
     });
     if (scroll) {
       const target = $('#labs');
@@ -449,11 +452,19 @@
   }
 
   const cmds = {
-    help: () => print('<span class="c">available commands:</span>\n  <span class="k">whoami</span>      who is this analyst\n  <span class="k">labs</span>        open SOC Defense Sandbox (all 4 interactive labs)\n  <span class="k">incident</span>    open the Incident War Room attack graph\n  <span class="k">packets</span>     open the Mini-Wireshark PCAP inspector\n  <span class="k">triage</span>      jump to the Triage Lab\n  <span class="k">phish</span>       jump to the Phish Hunt\n  <span class="k">skills</span>      tools &amp; tech stack\n  <span class="k">experience</span>  work history\n  <span class="k">certs</span>       certifications\n  <span class="k">education</span>   academic background\n  <span class="k">projects</span>    things I built\n  <span class="k">scan</span>        run a (fake) threat scan\n  <span class="k">nmap</span>        scan this portfolio\n  <span class="k">whois</span>       lookup the analyst\n  <span class="k">ping</span>        check if I\'m available\n  <span class="k">audio</span>       toggle cyber sound FX\n  <span class="k">contact</span>     get in touch\n  <span class="k">resume</span>      download my resume\n  <span class="k">print</span>       print-friendly resume view\n  <span class="k">theme</span>       toggle light/dark\n  <span class="k">history</span>     past commands\n  <span class="k">clear</span>       clear the screen\n<span class="c">psst… there are hidden commands too 👀</span>'),
+    help: () => print('<span class="c">available commands:</span>\n  <span class="k">whoami</span>      who is this analyst\n  <span class="k">labs</span>        open SOC Defense Sandbox (all 4 interactive labs)\n  <span class="k">incident</span>    open the Incident War Room attack graph\n  <span class="k">packets</span>     open the Mini-Wireshark PCAP inspector\n  <span class="k">triage</span>      jump to the Triage Lab\n  <span class="k">phish</span>       jump to the Phish Hunt\n  <span class="k">owlsight</span>    inspect OwlSight MRA &amp; launch tour\n  <span class="k">cisco</span>       view Cisco CCNAv7 coursework\n  <span class="k">skills</span>      tools &amp; tech stack\n  <span class="k">experience</span>  work history\n  <span class="k">certs</span>       certifications\n  <span class="k">education</span>   academic background\n  <span class="k">projects</span>    things I built\n  <span class="k">scan</span>        run a (fake) threat scan\n  <span class="k">nmap</span>        scan this portfolio\n  <span class="k">whois</span>       lookup the analyst\n  <span class="k">ping</span>        check if I\'m available\n  <span class="k">audio</span>       toggle cyber sound FX\n  <span class="k">contact</span>     get in touch\n  <span class="k">resume</span>      download my resume\n  <span class="k">print</span>       print-friendly resume view\n  <span class="k">theme</span>       toggle light/dark\n  <span class="k">history</span>     past commands\n  <span class="k">clear</span>       clear the screen\n<span class="c">psst… there are hidden commands too 👀</span>'),
     whoami: () => print('<span class="s">Mohamad Syazwan Mohd Shukri</span>\nSOC Analyst @ BitRanger Sdn. Bhd. · Penang, MY\nK-Youth Development Programme, Khazanah Nasional\nBIT (Hons.) Computer System Security @ UniKL MIIT\nEx-SOC intern @ Heitech Padu Berhad'),
     labs: () => { print('jumping to SOC Defense Sandbox...'); switchLabPane('pane-incident', true); },
     incident: () => { print('opening Incident War Room attack graph...'); switchLabPane('pane-incident', true); },
     packets: () => { print('opening Mini-Wireshark PCAP inspector...'); switchLabPane('pane-packets', true); },
+    owlsight: () => {
+      print('<span class="s">🦉 OwlSight MRA (Monitoring, Reporting, Analysis)</span>\n  Production SOC telemetry &amp; AI-assisted triage platform @ BitRanger Sdn. Bhd.\n  › Ingests Security Onion &amp; Elasticsearch across 3 enterprise client networks (MBPP, PDC, USM)\n  › Interactive Walkthrough: <a href="owlsight-tour.html" target="_blank" rel="noopener noreferrer">mosyaz.my/owlsight-tour.html</a>');
+    },
+    tour: () => cmds.owlsight(),
+    cisco: () => {
+      print('<span class="s">Cisco Networking Academy Credential:</span>\n<span class="p">✓</span> CCNAv7: Introduction to Networks (UniKL MIIT · Jun 2022)\n  Hands-on routing, switching, IPv4/IPv6 subnetting, and network troubleshooting.');
+    },
+    netacad: () => cmds.cisco(),
     skills: () => print('<span class="k">siem</span>     : Stellar Cyber, RSA NetWitness, Security Onion, Elasticsearch\n<span class="k">edr</span>      : Bitdefender, Trend Micro DSM\n<span class="k">ids/suricata</span> : Suricata, Zeek, Sysmon\n<span class="k">firewall</span> : Palo Alto, Sangfor, Huawei, FortiWeb WAF\n<span class="k">network</span>  : MikroTik RouterOS, Wireshark\n<span class="k">os</span>       : Kali Linux, Ubuntu, Windows\n<span class="k">code</span>     : Python, Java, C++, Solidity'),
     experience: () => print('<span class="s">[Aug 2026 – Present]</span>  SOC Analyst @ BitRanger Sdn. Bhd. (CyRes, USM)\n  › Architected OwlSight MRA & Security Onion data pipeline across 3 enterprise client networks (MBPP, PDC, USM)\n  › K-Youth Development Programme, Khazanah Nasional\n<span class="s">[Oct 2024 – Feb 2025]</span> SOC Analyst Intern @ Heitech Padu Berhad\n  › SIEM alert monitoring, IOC threat hunting, firewall/WAF blocking\n<span class="s">[Mar 2021 – Jul 2021]</span> Telecom Drafter Intern @ ECHO Broadband\n  › Fiber optic network drafting, SLDs'),
     certs: () => print('<span class="s">Proctored Certifications:</span>\n<span class="p">✓</span> CompTIA Security+  <span class="c">(Dec 2023)</span>\n<span class="p">✓</span> MikroTik MTCNA     <span class="c">(Dec 2020)</span>\n\n<span class="s">Academy Credentials:</span>\n<span class="p">✓</span> Cisco CCNAv7: Intro to Networks <span class="c">(UniKL MIIT · Jun 2022)</span>'),
@@ -736,7 +747,8 @@
   $$('#labNav .lab-tab').forEach(btn => {
     btn.onclick = () => {
       audio.click();
-      switchLabPane(btn.dataset.pane);
+      const target = btn.dataset.pane || (btn.dataset.tab ? `pane-${btn.dataset.tab}` : null);
+      if (target) switchLabPane(target);
     };
   });
 
@@ -1013,8 +1025,13 @@
       triageVisible = entries[0].isIntersecting;
     }, { threshold: 0.15 }).observe(triageSec);
   }
+  const isTriageInView = () => {
+    if (!triageSec || !triageSec.classList.contains('active')) return false;
+    const r = triageSec.getBoundingClientRect();
+    return r.top < (window.innerHeight || document.documentElement.clientHeight) && r.bottom > 0;
+  };
   addEventListener('keydown', e => {
-    if (!triageVisible || !triageSec || !triageSec.classList.contains('active') || e.ctrlKey || e.metaKey || e.altKey) return;
+    if ((!triageVisible && !isTriageInView()) || !triageSec || !triageSec.classList.contains('active') || e.ctrlKey || e.metaKey || e.altKey) return;
     if (e.target && e.target.closest('input, textarea, select, [contenteditable]')) return;
     const key = e.key.toLowerCase();
     if (!answered && $('#verdictBtns').style.display !== 'none') {

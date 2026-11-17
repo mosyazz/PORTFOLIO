@@ -263,16 +263,16 @@
           <h2>Interactive Security Operations Labs</h2>
           <p class="sec-sub">Hands-on simulations demonstrating real-world incident response, traffic analysis, alert triage, and threat hunting.</p>
         </div>
-        <div class="lab-nav" id="labNav">
-          <button class="lab-tab on" data-tab="incident">⚔️ Incident Graph</button>
-          <button class="lab-tab" data-tab="packets">🔍 PCAP Inspector</button>
-          <button class="lab-tab" data-tab="triage">🚨 Alert Triage</button>
-          <button class="lab-tab" data-tab="phishing">🎣 Phish Hunt</button>
+        <div class="lab-nav" id="labNav" role="tablist" aria-label="SOC Defense Sandbox Navigation">
+          <button class="lab-tab on" data-pane="pane-incident" data-tab="incident" role="tab" aria-selected="true" aria-controls="pane-incident">⚔️ Incident Graph</button>
+          <button class="lab-tab" data-pane="pane-packets" data-tab="packets" role="tab" aria-selected="false" aria-controls="pane-packets">🔍 PCAP Inspector</button>
+          <button class="lab-tab" data-pane="pane-triage" data-tab="triage" role="tab" aria-selected="false" aria-controls="pane-triage">🚨 Alert Triage</button>
+          <button class="lab-tab" data-pane="pane-phishing" data-tab="phishing" role="tab" aria-selected="false" aria-controls="pane-phishing">🎣 Phish Hunt</button>
         </div>
       </div>
 
       <!-- Tab 1: Incident War Room -->
-      <div class="lab-pane active" id="pane-incident">
+      <div class="lab-pane active" id="pane-incident" role="tabpanel" aria-label="Incident War Room Lab">
         <div class="card reveal">
           <div class="incident-head">
             <div>
@@ -309,7 +309,7 @@
       </div>
 
       <!-- Tab 2: Packet Inspector -->
-      <div class="lab-pane" id="pane-packets">
+      <div class="lab-pane" id="pane-packets" role="tabpanel" aria-label="PCAP Inspector Lab">
         <div class="card ws-card reveal">
           <div class="ws-scenarios" id="wsScenarioTabs"></div>
           <div class="ws-filter-bar">
@@ -350,7 +350,7 @@
       </div>
 
       <!-- Tab 3: Triage Lab -->
-      <div class="lab-pane" id="pane-triage">
+      <div class="lab-pane" id="pane-triage" role="tabpanel" aria-label="Alert Triage Lab">
         <div class="game reveal">
           <div class="card alert-card" id="alertCard">
             <div class="alert-top"><span class="sev" id="aSev"></span><span class="date" id="aMeta"></span></div>
@@ -377,7 +377,7 @@
       </div>
 
       <!-- Tab 4: Phish Hunt -->
-      <div class="lab-pane" id="pane-phishing">
+      <div class="lab-pane" id="pane-phishing" role="tabpanel" aria-label="Phish Hunt Lab">
         <div class="phish reveal">
           <div class="card mail" id="mail">
             <div class="mail-head">

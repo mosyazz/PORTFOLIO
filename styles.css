@@ -435,7 +435,7 @@ html { scrollbar-color: color-mix(in srgb, var(--accent) 55%, transparent) var(-
 
 /* Print: clean one-column resume layout */
 @media print {
-  #boot, #progress, .scanlines, .cur-ring, .cur-dot, header.nav, #rain, #net, .term, #workflow, #incident, #packets, #triage, #phishing, #toTop, #toast,
+  #boot, #progress, .scanlines, .cur-ring, .cur-dot, header.nav, #rain, #net, .term, #workflow, #labs, #incident, #packets, #triage, #phishing, #toTop, #toast,
   .filters, .hint, .cta, .ascii, .uptime, .proj-banner, .sec-sub, .status, .flip-back, .role, .meter { display: none !important; }
   .print-only { display: block; margin: 0 0 10px; font-family: var(--mono); font-size: 10pt; color: #0a7a4d; }
   .sec-head, h2, h3 { break-after: avoid; page-break-after: avoid; }
